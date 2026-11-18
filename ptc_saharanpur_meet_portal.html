@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <title>PTC Saharanpur | Meeting Portal</title>
+  <style>
+    :root { --navy:#101827; --navy2:#18263a; --gold:#d7ad52; --cream:#f7f4ec; --muted:#667085; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; font-family:Arial,Helvetica,sans-serif; color:#172033;
+      background:linear-gradient(145deg,#eef1f5,#faf8f2); display:flex; flex-direction:column; }
+    header { background:var(--navy); color:white; padding:20px 18px; border-bottom:4px solid var(--gold); }
+    .head { max-width:920px; margin:auto; display:flex; align-items:center; gap:14px; }
+    .mark { width:48px;height:48px;border:1px solid var(--gold);border-radius:12px;display:grid;place-items:center;color:var(--gold);font-weight:800;font-size:13px; }
+    header h1 { font-size:18px; margin:0 0 4px; letter-spacing:.7px; }
+    header p { margin:0; color:#d4dbe5; font-size:12px; letter-spacing:1.5px; }
+    main { width:min(92%,680px); margin:38px auto; flex:1; }
+    .card { background:white; border:1px solid #e4e7ec; border-radius:20px; padding:clamp(22px,5vw,40px);
+      box-shadow:0 18px 55px rgba(16,24,39,.09); }
+    .eyebrow { color:#9a7428; font-size:11px; font-weight:800; letter-spacing:2px; text-align:center; }
+    h2 { text-align:center; color:var(--navy); font-size:clamp(25px,5vw,34px); margin:12px 0 8px; }
+    .sub { text-align:center; color:var(--muted); margin:0 0 28px; font-size:14px; line-height:1.5; }
+    .topic { background:var(--cream); border:1px solid #eee3c9; border-radius:14px; padding:20px; text-align:center; margin:20px 0; }
+    .topic small { display:block; color:#8b6a2d; text-transform:uppercase; letter-spacing:1.5px; font-size:10px; font-weight:800; margin-bottom:8px; }
+    #topicText { font-size:clamp(20px,4vw,27px); font-weight:750; color:#172033; overflow-wrap:anywhere; }
+    #dateText { color:#667085; font-size:13px; margin-top:10px; }
+    .join { display:flex; justify-content:center; align-items:center; gap:10px; width:100%; padding:17px 20px; border-radius:12px;
+      background:var(--gold); color:#172033; font-weight:800; text-decoration:none; letter-spacing:.5px; transition:.2s; }
+    .join:hover { background:#c99b39; transform:translateY(-1px); }
+    .note { text-align:center; color:#7b8493; font-size:12px; margin:14px 0 0; line-height:1.5; }
+    .admin { margin-top:26px; border-top:1px solid #eaecf0; padding-top:22px; }
+    .admin summary { cursor:pointer; color:#475467; font-size:13px; font-weight:700; }
+    label { display:block; font-size:12px; font-weight:700; color:#344054; margin:14px 0 6px; }
+    input { width:100%; padding:12px 13px; border:1px solid #d0d5dd; border-radius:9px; font:inherit; font-size:14px; }
+    input:focus { outline:2px solid #e8cb8d; border-color:#bd913c; }
+    .secondary { margin-top:14px; border:0; border-radius:9px; background:var(--navy); color:white; padding:13px 16px; font-weight:700; width:100%; cursor:pointer; }
+    #shareResult { display:none; margin-top:13px; padding:12px; background:#f2f4f7; border-radius:9px; overflow-wrap:anywhere; font-size:12px; }
+    #copyBtn { display:none; margin-top:9px; background:#e8edf4; border:0; padding:10px 13px; border-radius:8px; cursor:pointer; font-weight:700; }
+    footer { text-align:center; color:#7b8493; font-size:11px; padding:20px; }
+    .hidden { display:none !important; }
+    @media(max-width:480px){ main{margin:22px auto;} header h1{font-size:15px;} }
+  </style>
+</head>
+<body>
+<header>
+  <div class="head">
+    <div class="mark">PTC</div>
+    <div><h1>POSTAL TRAINING CENTRE, SAHARANPUR</h1><p>ONLINE MEETING PORTAL</p></div>
+  </div>
+</header>
+<main>
+  <section class="card">
+    <div class="eyebrow">MEETING INVITATION</div>
+    <h2>Welcome to the Meeting</h2>
+    <p class="sub">Please check the meeting details below and click the button to join.</p>
+    <div class="topic">
+      <small>Meeting Topic</small>
+      <div id="topicText">Meeting topic will appear here</div>
+      <div id="dateText"></div>
+    </div>
+    <a id="joinBtn" class="join hidden" href="#" target="_blank" rel="noopener noreferrer">▶ &nbsp; JOIN GOOGLE MEET</a>
+    <p id="missing" class="note">The meeting organiser has not added the meeting details yet.</p>
+    <p class="note">Please join at the scheduled time. Keep your microphone muted unless invited to speak.</p>
+
+    <details class="admin" id="adminPanel">
+      <summary>Organiser: Create a meeting invitation link</summary>
+      <label for="topicInput">Meeting topic</label>
+      <input id="topicInput" placeholder="e.g. Postman Training – PTC Saharanpur">
+      <label for="meetInput">Google Meet link</label>
+      <input id="meetInput" type="url" placeholder="https://meet.google.com/xxx-xxxx-xxx">
+      <label for="dateInput">Date and time (optional)</label>
+      <input id="dateInput" placeholder="e.g. 20 November 2026, 11:00 AM">
+      <button class="secondary" id="generateBtn">Generate shareable invitation link</button>
+      <div id="shareResult"></div>
+      <button id="copyBtn">Copy invitation link</button>
+      <p class="note">Enter the details, generate the link, then share the generated link with participants.</p>
+    </details>
+  </section>
+</main>
+<footer>PTC Saharanpur · Official Training Meeting Portal</footer>
+<script>
+(function () {
+  const params = new URLSearchParams(location.search);
+  const topic = params.get('topic');
+  const meet = params.get('meet');
+  const date = params.get('date');
+  const topicEl = document.getElementById('topicText');
+  const dateEl = document.getElementById('dateText');
+  const join = document.getElementById('joinBtn');
+  const missing = document.getElementById('missing');
+  const panel = document.getElementById('adminPanel');
+
+  function safeMeetUrl(value) {
+    try {
+      const u = new URL(value);
+      return u.protocol === 'https:' && (u.hostname === 'meet.google.com' || u.hostname.endsWith('.meet.google.com')) ? u.href : null;
+    } catch (_) { return null; }
+  }
+
+  if (topic && meet && safeMeetUrl(meet)) {
+    topicEl.textContent = topic;
+    dateEl.textContent = date || '';
+    join.href = safeMeetUrl(meet);
+    join.classList.remove('hidden');
+    missing.classList.add('hidden');
+    panel.classList.add('hidden');
+    document.title = topic + ' | PTC Saharanpur';
+  } else if (topic || meet) {
+    missing.textContent = 'Meeting details are incomplete or the Google Meet URL is invalid. Please contact the organiser.';
+  }
+
+  document.getElementById('generateBtn').addEventListener('click', function () {
+    const t = document.getElementById('topicInput').value.trim();
+    const m = safeMeetUrl(document.getElementById('meetInput').value.trim());
+    const d = document.getElementById('dateInput').value.trim();
+    const result = document.getElementById('shareResult');
+    const copy = document.getElementById('copyBtn');
+    if (!t || !m) {
+      result.style.display = 'block';
+      result.textContent = 'Please enter a meeting topic and a valid https://meet.google.com link.';
+      copy.style.display = 'none';
+      return;
+    }
+    const u = new URL(location.href);
+    u.search = '';
+    u.searchParams.set('topic', t);
+    u.searchParams.set('meet', m);
+    if (d) u.searchParams.set('date', d);
+    result.style.display = 'block';
+    result.textContent = u.href;
+    copy.style.display = 'inline-block';
+    copy.onclick = async function () {
+      try { await navigator.clipboard.writeText(u.href); copy.textContent = 'Copied!'; }
+      catch (_) { result.textContent = 'Copy manually: ' + u.href; }
+    };
+  });
+})();
+</script>
+</body>
+</html>
